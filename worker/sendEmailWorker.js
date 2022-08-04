@@ -19,7 +19,6 @@ const emailSender = async (consumerName) => {
       streamInfo[k] = v;
     }
     if(streamInfo.groups === 0){
-
         const res = await redisClient.call('XGROUP', 'CREATE', emailStreamKey, CONSUMER_GROUP_NAME, '$');
         console.log(res);
     }
