@@ -1,0 +1,21 @@
+{
+  "name": "email-microservice",
+  "version": "1.0.0",
+  "description": "Email sending microservice",
+  "main": "emailService.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "Express",
+    "Nodemailer"
+  ],
+  "author": "Shreyas KS",
+  "license": "MIT",
+  "dependencies": {
+    "dotenv": "^16.0.1",
+    "express": "^4.18.1",
+    "ioredis": "^5.2.2",
+    "nodemailer": "^6.7.7"
+  }
+}
