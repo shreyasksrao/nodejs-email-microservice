@@ -2,7 +2,7 @@ const Redis = require('ioredis');
 const dotenv = require('dotenv');
 const path = require('path');
 
-dotenv.config({ path: path.join(__dirname, '../../config/emailConfig.env') });
+dotenv.config({ path: path.join(__dirname, '../config/emailerConfig.env') });
 
 const MAX_SEARCH_RESULTS = 1000;
 

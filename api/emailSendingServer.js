@@ -5,7 +5,7 @@ const dotenv = require('dotenv');
 const path = require('path');
 
 const initRoutes = require("./routes");
-const logger = require('./winston.conf.js');
+const logger = require('../utils/logger');
 
 dotenv.config({ path: path.join(__dirname, '../config/emailerConfig.env') });
 
@@ -38,7 +38,7 @@ initRoutes(app);
 app.post('/api/gmail/email',
   async (req, res) => {
     logger.debug(`Received send email request via GMail transport.`);
-    logger.debug(`Email options - ${req.body}`);
+    logger.debug(`Email options - ${JSON.stringify(req.body, null, 2)}`);
     const emailOptions = req.body;
 
     const pipeline = redis.pipeline();
@@ -62,5 +62,6 @@ app.post('/api/gmail/email',
 
 const port = 5005;
 app.listen(port, () => {
-  console.log(`🚀🔥 Email receiver listening on port ${port}.`);
+  logger.info(`🚀🔥 Email sending server listening on port ${port}.`);
+  console.log(`🚀🔥 Email sending server listening on port ${port}.`);
 });
