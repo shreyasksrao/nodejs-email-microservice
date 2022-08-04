@@ -5,44 +5,53 @@ const dotenv = require('dotenv');
 const path = require('path');
 
 const initRoutes = require("./routes");
+const logger = require('./winston.conf.js');
 
 dotenv.config({ path: path.join(__dirname, '../config/emailerConfig.env') });
 
+logger.info(`Connecting to REDIS - ${process.env.REDIS_HOST} on Port number ${process.env.REDIS_PORT}...`);
 const redis = new Redis({
   host: process.env.REDIS_HOST,
   port: process.env.REDIS_PORT,
   password: process.env.REDIS_PASS,
 });
 
+const EMAIL_STREAM_NAME = process.env.EMAIL_STREAM_NAME;
+const EMAIL_STREAM_MAX_LENGTH = process.env.EMAIL_STREAM_MAX_LENGTH;
+logger.info(`Email stream name - ${EMAIL_STREAM_NAME}, Max stream length - ${EMAIL_STREAM_MAX_LENGTH}`);
+
 global.__basedir = __dirname;
+
+const app = express();
+
+app.use(express.json());
 
 var corsOptions = {
     origin: "http://localhost:8081"
 };
-const getKeyName = (...args) => `emailer:${args.join(':')}`;
-
-const app = express();
-app.use(express.json());
 app.use(cors(corsOptions));
+
 app.use(express.urlencoded({ extended: true }));
 
 initRoutes(app);
 
-const emailStreamKey = getKeyName('emailStream');
-const maxStreamLength = 100;
-
 app.post('/api/gmail/email',
   async (req, res) => {
+    logger.debug(`Received send email request via GMail transport.`);
+    logger.debug(`Email options - ${req.body}`);
     const emailOptions = req.body;
+
     const pipeline = redis.pipeline();
     pipeline.xadd(
-        emailStreamKey, 'MAXLEN', '~', maxStreamLength, '*', ...Object.entries(emailOptions).flat(),
+        EMAIL_STREAM_NAME, 'MAXLEN', '~', EMAIL_STREAM_MAX_LENGTH, '*', ...Object.entries(emailOptions).flat(),
         (err, result) => {
             if (err) {
-            console.error('Error adding Email to stream:');
-            console.error(err);
+                logger.error(`Error while adding Email to stream: \n Details :: ${err}`);
+                console.error('‼ Error adding Email to stream:');
+                console.error(err);
             } else {
-            console.log(`Received checkin, added to stream as ${result}`);
+                logger.info(`Email sending request added successfully to stream with key ${result}`);
+                console.log(`✉  Email sending request added successfully to stream with key ${result}`);
             }
         },
     );

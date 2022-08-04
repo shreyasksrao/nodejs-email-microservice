@@ -3,7 +3,7 @@ const { createLogger, format, transports } = require('winston');
 const dotenv = require('dotenv');
 const path = require('path');
 
-dotenv.config({ path: path.join(__dirname, '../config/config.env') });
+dotenv.config({ path: path.join(__dirname, '../config/emailerConfig.env') });
 const log_file = path.join(__dirname, '../logs/server.log');
 
 module.exports = createLogger({
