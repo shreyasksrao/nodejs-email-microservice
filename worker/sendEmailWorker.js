@@ -47,11 +47,10 @@ const emailSender = async (consumerName) => {
 
       const emailProcessId = emailOptions.id;
 
-      console.log(`${consumerName}: Processing ${emailProcessId}.`);
+      console.log(`${consumerName}: ⏳ Processing ${emailProcessId}.`);
       console.log(emailOptions);
 
       const ack = await redisClient.xack(emailStreamKey, CONSUMER_GROUP_NAME, emailProcessId);
-
       console.log(`${consumerName}: ${ack === 1 ? 'Acknowledged' : 'Error acknowledging'} processing of email ${emailProcessId}.`);
 
       console.log(`${consumerName}: Pausing to simulate work.`);
