@@ -1,6 +1,6 @@
-node_modules
+node_modules/
 package-lock.json
-config/emailerConfig.env
+email-sending-server/config/emailerConfig.env
 config/jwt/keys
 config/ssl
 logs/
