@@ -1,12 +1,15 @@
 const util = require("util");
+const path = require('path');
 const multer = require("multer");
 const logger = require('../../utils/logger');
 
 const maxSize = 20 * 1024 * 1024;
 
+global.__basedir = __dirname;
+console.log(__basedir);
 let storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, __basedir + "/resources/static/assets/uploads/");
+    cb(null, path.join(__basedir, '../..', '/uploads'));
   },
   filename: (req, file, cb) => {
     console.log(`Received File : ${file.originalname}`);
@@ -18,8 +21,18 @@ let storage = multer.diskStorage({
 let uploadFile = multer({
   storage: storage,
   limits: { fileSize: maxSize },
-}).single("file");
+}).array("files");
 
-let uploadFileMiddleware = util.promisify(uploadFile);
+let uploadMultipleFileMiddleware = util.promisify(uploadFile);
 
-module.exports = uploadFileMiddleware;
+let uploadSingleFile = multer({
+  storage: storage,
+  limits: { fileSize: maxSize },
+}).single('file');
+
+let uploadSingleFileMiddleware = util.promisify(uploadSingleFile);
+
+module.exports = {
+  uploadMultipleFileMiddleware,
+  uploadSingleFileMiddleware
+};
