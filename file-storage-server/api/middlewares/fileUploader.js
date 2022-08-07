@@ -6,7 +6,6 @@ const logger = require('../../utils/logger');
 const maxSize = 20 * 1024 * 1024;
 
 global.__basedir = __dirname;
-console.log(__basedir);
 let storage = multer.diskStorage({
   destination: (req, file, cb) => {
     cb(null, path.join(__basedir, '../..', '/uploads'));

@@ -48,7 +48,8 @@ const upload = async (req, res) => {
     logger.error(`Could not upload the file: ${JSON.stringify(req.file)}.\nError: ${err}`);
     res.status(500).json({
       statusCode: 500,
-      message: `Could not upload the file: ${JSON.stringify(req.file)}. ${err}`,
+      message: `Could not upload the file: ${JSON.stringify(req.file)}`,
+      devMessage: `Error: ${err}`
     });
   }
 };
@@ -61,7 +62,7 @@ const uploadMultipleFiles = async (req, res) => {
       logger.info(`File not present in the request !`);
       return res.status(400).json({ 
         statusCode: 400,
-        message: "Please upload a file!" 
+        message: "Please upload a file! File should be uploaded as form-data with 'file' key" 
       });
     }
 
@@ -77,7 +78,7 @@ const uploadMultipleFiles = async (req, res) => {
       logger.error(`Error: File limit exceeded ! File size should not be more than 20 MB. File name: ${JSON.stringify(req.files)}`);
       return res.status(500).json({
         statusCode: 500,
-        message: "File size cannot be larger than 20MB!",
+        message: "File size cannot be more than 20MB!",
       });
     }
     logger.error(`Could not upload the file: ${JSON.stringify(req.files)}.\nError: ${err}`);
