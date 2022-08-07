@@ -1,9 +1,8 @@
 FROM node:16.5.0-alpine
 
 RUN addgroup -S fileStorageUserGroup && adduser -S fileStorageUser -G fileStorageUserGroup
-
+# Create app directory and give the permission to that directory for app user
 RUN mkdir -p /home/fileStorageServer/app && chown -R fileStorageUser:fileStorageUserGroup /home/fileStorageServer/app
-
 # Create directory for Uploaded files
 RUN mkdir /home/fileStorageServer/app/uploads && chown -R fileStorageUser:fileStorageUserGroup /home/fileStorageServer/app/uploads
 
