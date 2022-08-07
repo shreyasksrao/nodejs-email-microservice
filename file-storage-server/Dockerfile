@@ -1,9 +1,15 @@
 FROM node:16.5.0-alpine
 
-RUN groupadd -r fileStorageUser && useradd -m -r -g -s /bin/bash fileStorageUser fileStorageUser
-USER fileStorageUser
+RUN addgroup -S fileStorageUserGroup && adduser -S fileStorageUser -G fileStorageUserGroup
+
+RUN mkdir -p /home/fileStorageServer/app && chown -R fileStorageUser:fileStorageUserGroup /home/fileStorageServer/app
+
+# Create directory for Uploaded files
+RUN mkdir /home/fileStorageServer/app/uploads && chown -R fileStorageUser:fileStorageUserGroup /home/fileStorageServer/app/uploads
 
 WORKDIR /home/fileStorageServer/app
+
+USER fileStorageUser
 
 COPY . .
 
@@ -20,4 +26,4 @@ RUN npm install --production
 
 EXPOSE ${FILE_STORAGE_SERVER_PORT}
 
-CMD [“node”, api/fileStorageServer”]
+CMD ["node", "api/fileStorageServer"]

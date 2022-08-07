@@ -7,7 +7,7 @@ const logger = require('../../utils/logger');
 dotenv.config({ path: path.join(__dirname, '../config/fileStorageServer.env') });
 
 const baseUrl = `http://${process.env.FILE_SERVER_HOSTNAME}:${process.env.FILE_SERVER_PORT}/files/`;
-const directoryPath = path.join(__dirname, '../../uploads');
+const directoryPath = path.join(__dirname, '../../uploads/');
 
 const upload = async (req, res) => {
   try {

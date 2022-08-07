@@ -1,0 +1,23 @@
+version: '3'
+
+services:
+  fileServer:
+    image: "file-storage-server:1.0"
+    container_name: "file_storage_container"
+    ports:
+      - "5006:5006"
+    environment:
+      CORS_ALLOW_HOSTS: "http://192.168.1.8"
+      FILE_SERVER_PORT: 5006
+      FILE_SERVER_HOSTNAME: "192.168.1.200"
+    volumes:
+      - file_server_data:/home/fileStorageServer/app/uploads
+    networks:
+     - "file_server_network"
+
+networks:
+  file_server_network:
+    driver: "bridge"
+
+volumes:
+    file_server_data:
